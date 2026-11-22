@@ -1,0 +1,132 @@
+{
+  "titles": {
+    "ceo": "CEO",
+    "lead": "PM",
+    "room": "대표실"
+  },
+  "teams": [
+    {
+      "name": "기획팀",
+      "agents": [
+        "planning-researcher",
+        "planning-spec"
+      ]
+    },
+    {
+      "name": "백엔드팀",
+      "agents": [
+        "be-api",
+        "be-domain",
+        "be-reviewer"
+      ]
+    },
+    {
+      "name": "DBA",
+      "agents": [
+        "dba"
+      ]
+    },
+    {
+      "name": "프론트엔드팀",
+      "agents": [
+        "fe-design-system",
+        "fe-feature",
+        "fe-reviewer"
+      ]
+    },
+    {
+      "name": "QA팀",
+      "agents": [
+        "qa"
+      ]
+    },
+    {
+      "name": "인프라팀",
+      "agents": [
+        "infra"
+      ]
+    },
+    {
+      "name": "보안팀",
+      "agents": [
+        "security-reviewer"
+      ]
+    }
+  ],
+  "docs": {
+    "ceo": [
+      "CLAUDE.md#7. 승인 규칙",
+      "docs/rules/stack.md"
+    ],
+    "lead": [],
+    "agent:be-api": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/frontend.md"
+    ],
+    "agent:be-domain": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md"
+    ],
+    "agent:be-reviewer": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/review.md"
+    ],
+    "agent:dba": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/review.md"
+    ],
+    "agent:fe-design-system": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/frontend.md"
+    ],
+    "agent:fe-feature": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/frontend.md"
+    ],
+    "agent:fe-reviewer": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/frontend.md",
+      "docs/rules/review.md"
+    ],
+    "agent:infra": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/frontend.md"
+    ],
+    "agent:planning-researcher": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md"
+    ],
+    "agent:planning-spec": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md"
+    ],
+    "agent:qa": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/frontend.md",
+      "docs/rules/qa.md"
+    ],
+    "agent:security-reviewer": [
+      "docs/rules/ownership.md",
+      "docs/rules/handoff.md",
+      "docs/rules/stack.md",
+      "docs/rules/review.md"
+    ]
+  }
+}
