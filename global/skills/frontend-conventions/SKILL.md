@@ -178,6 +178,12 @@ frontend/
   fireEvent.click(submitButton); fireEvent.click(submitButton);   // 폼이면 fireEvent.submit(form) 두 번
   await waitFor(() => expect(handlerCalls).toBe(1));
   ```
+  - **폼이 아닌 버튼**(로그아웃, 토글 등)은 `fireEvent.click` 두 번으로도 부족하다. 첫 클릭 직후 React가 동기로 다시 그려 버튼이 비활성이 되면, 잠금이 없는 구현도 통과한다. 두 클릭을 **한 `act` 안에서** 보낸다. 잠금을 빼면 이 테스트가 실패하는지 한 번 확인한다.
+  ```ts
+  act(() => { button.click(); button.click(); });
+  await waitFor(() => expect(handlerCalls).toBe(1));
+  ```
+- **CSS로 숨긴 글자는 jsdom이 못 잡는다.** jsdom은 CSS를 적용하지 않아 `visibility: hidden`·`display: none`으로 사라진 문구도 이름·텍스트 검사를 통과한다. 상태에 따라 문구를 숨기거나 바꾸는 공통 컴포넌트(로딩 버튼 등)는 실제 브라우저 e2e에서 `toHaveAccessibleName`·axe로 확인하도록 qa에 넘긴다.
 - 날짜 표시 테스트는 handler가 `Z`로 끝나는 시각을 줄 때 로컬 시간으로 바뀌는지 확인한다.
 
 ## 완료 기준 (Definition of Done)
@@ -196,3 +202,8 @@ frontend/
 - [ ] `npm run test` 전체 통과 (기존 테스트 포함)
 - [ ] fe-feature 리포트의 중복 요청 방지 목록마다 테스트 작성
 - [ ] 커버한 인수 조건 번호 기록
+
+<!-- local-overlay: 이 블록은 키트의 local/overlay에서 온다. 여기서 고치지 말고 그 파일을 고친다 -->
+## 이 PC에서 쓰는 웹 플랫폼 가이드 스킬
+- 웹 API·HTML·CSS 기능 선택, 접근성, 네이티브 요소, 웹 성능 세부 기법은 `modern-web-guidance` 스킬로 확인한다 (forms, performance, accessibility, html, css 지침).
+<!-- /local-overlay -->
