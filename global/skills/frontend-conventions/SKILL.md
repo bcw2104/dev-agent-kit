@@ -202,8 +202,3 @@ frontend/
 - [ ] `npm run test` 전체 통과 (기존 테스트 포함)
 - [ ] fe-feature 리포트의 중복 요청 방지 목록마다 테스트 작성
 - [ ] 커버한 인수 조건 번호 기록
-
-<!-- local-overlay: 이 블록은 키트의 local/overlay에서 온다. 여기서 고치지 말고 그 파일을 고친다 -->
-## 이 PC에서 쓰는 웹 플랫폼 가이드 스킬
-- 웹 API·HTML·CSS 기능 선택, 접근성, 네이티브 요소, 웹 성능 세부 기법은 `modern-web-guidance` 스킬로 확인한다 (forms, performance, accessibility, html, css 지침).
-<!-- /local-overlay -->
