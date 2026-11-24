@@ -80,6 +80,21 @@ chmod +x install.sh init-project.sh
 - 프론트가 있는 프로젝트라면 Baseline 목표(기본 Widely available)가 맞는지 사용자에게 확인한다.
 - 통합 테스트(Testcontainers)와 E2E에는 Docker가 필요하다 (macOS는 Docker Desktop 또는 OrbStack, Windows는 Docker Desktop).
 
+### 프로젝트에서 안 쓰는 플러그인 끄기 (토큰 절감)
+켜진 플러그인은 쓰지 않아도 스킬 목록·에이전트 목록·MCP 도구 이름이 매 세션 컨텍스트에 들어간다. 그 프로젝트에서 안 쓰는 플러그인은 **프로젝트의 `.claude/settings.json`**에서 끈다. 데스크톱 앱 설정이나 `/plugin`에서 끄면 다른 프로젝트에서도 꺼진다.
+
+```json
+{
+  "enabledPlugins": {
+    "<플러그인>@<마켓플레이스>": false,
+    "<계정 동기화 플러그인>@synced": false
+  }
+}
+```
+- 키 이름은 `claude plugin list --json`의 `id`를 그대로 쓴다. claude.ai 계정에서 동기화된 플러그인은 `<이름>@synced`다.
+- 우선순위는 `settings.local.json` > 프로젝트 `settings.json` > 사용자 설정이라, 여기서 `false`로 두면 그 프로젝트에서만 꺼진다. 새 세션부터 적용된다.
+- 보안 훅처럼 모든 프로젝트에 필요한 플러그인은 끄지 않는다.
+
 ## Windows에서 세팅하기
 
 Windows 네이티브(Git Bash)에서 세팅한다. WSL 안에서 설치하면 WSL의 `~/.claude`에 들어가 Windows용 Claude Code에서 보이지 않으므로 쓰지 않는다.
