@@ -71,7 +71,8 @@ model: opus
 - Controller, Request/Response DTO, 오케스트레이션, global 공통 → be-api
 - DDL 변경, 마이그레이션 작성 → 필요하면 dba에게 요청 사항으로 반환
 - 테스트 코드 → be-reviewer
-- git 커밋·푸시
+- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 만든 변경만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
+- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
 
 ## 완료 기준
 spring-conventions "완료 기준"의 구현 담당 항목. 특히:

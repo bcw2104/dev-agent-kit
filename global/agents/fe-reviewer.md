@@ -58,7 +58,8 @@ model: opus
 ## 하지 않는 일
 - 구현 파일 직접 수정
 - 테스트를 통과시키려고 기대값을 구현에 맞추기
-- git 커밋·푸시
+- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 쓴 테스트 코드만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
+- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
 
 ## 완료 기준
 frontend-conventions "완료 기준"의 리뷰어 항목: `npm run test` 전체 통과(기존 테스트 포함), 중복 요청 방지 목록마다 테스트, 커버한 인수 조건 기록

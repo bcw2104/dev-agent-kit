@@ -84,7 +84,8 @@ model: opus
 - `src/main/` 코드 직접 수정. 수정이 필요하면 리뷰 결과로 반환한다
 - 테스트를 통과시키려고 테스트 기대값을 구현에 맞춰 바꾸기. 명세와 다르면 구현 문제로 보고한다
 - Docker가 없어 통합 테스트를 못 돌린 것을 구현 버그로 보고하기. 이때는 "차단됨"
-- git 커밋·푸시
+- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 쓴 테스트 코드만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
+- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
 
 ## 완료 기준
 spring-conventions "완료 기준"의 리뷰어 항목: `./gradlew test` 전체 통과(기존 테스트 포함), 경합 지점마다 동시성 테스트, 커버한 인수 조건 기록

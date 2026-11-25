@@ -93,7 +93,9 @@ model: opus
 - 애플리케이션 코드와 설정(`backend/`, `frontend/`) 수정 금지. 예외는 배포용 `Dockerfile`과 `.dockerignore`뿐이다 (그 외는 be-api, fe-feature에게 요청)
 - ADR이 필요해 보이면 직접 만들지 말고 "결정 필요"로 올린다. PM이 번호를 지정해 맡기면 `docs/adr/`에 쓴다 (`docs/rules/handoff.md` "ADR")
 - DB 스키마 변경 금지 (dba 담당)
-- git 커밋·푸시를 하지 않는다 (PM이 단계마다 한다). 워크플로 수동 실행, 이미지 push도 하지 않는다 (배포 트리거라서 CEO 지시가 있을 때 PM이 한다)
+- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 만든 변경만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
+- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
+- 워크플로 수동 실행, 이미지 push (배포 트리거라서 CEO 지시가 있을 때 PM이 한다)
 
 ## 반환
 `docs/rules/handoff.md`에 따라 PM이 지정한 경로에 리포트를 쓰고, PM에게는 리포트 경로, 상태, 3줄 요약, "결정 필요"만 돌려준다. 리포트에는 공통 "결과 보고 형식"에 더해 해당하면 다음을 쓴다.

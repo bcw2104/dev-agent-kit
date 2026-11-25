@@ -44,7 +44,9 @@ model: opus
 - 특정 기능에서만 쓰는 컴포넌트는 받지 않는다 (fe-feature 영역에 두도록 반환)
 - 컴포넌트에 API 호출이나 비즈니스 로직을 넣지 않는다
 - 유료 폰트·아이콘·UI 라이브러리는 쓰지 않는다 (필요하면 `docs/templates/cost-approval.md` 형식으로 리포트에 쓴다)
-- 테스트 코드는 쓰지 않는다 (fe-reviewer 담당). git 커밋·푸시를 하지 않는다
+- 테스트 코드는 쓰지 않는다 (fe-reviewer 담당)
+- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 만든 변경만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
+- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
 
 ## 완료 기준
 frontend-conventions "완료 기준"의 구현 담당 항목 + 새/변경 컴포넌트의 사용 예시를 컴포넌트 파일 상단 주석으로 제공

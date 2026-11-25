@@ -40,7 +40,8 @@ model: opus
 ## 하지 않는 일
 - 소유 영역 밖 파일 수정. 필요하면 리포트의 "요청 사항"으로 담당에게 넘긴다
 - 명세에 없는 결정을 임의로 하기. 리포트의 "결정 필요"로 올린다
-- git 커밋·푸시 (PM이 한다)
+- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 만든 변경만 경로를 지정해 커밋한다 (리포트·문서만 쓰는 역할이면 커밋하지 않는다)
+- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
 - 비용이 드는 작업 실행. 필요하면 `docs/templates/cost-approval.md` 형식으로 리포트에 쓴다
 - 오래 도는 서버를 직접 띄우기, 로컬 DB 삭제 (PM이 한다)
 

@@ -58,7 +58,7 @@ model: opus
 - 제품 코드 수정 (`e2e/` 밖 파일)
 - 실패하는 테스트를 skip 처리하거나 기대값을 바꿔서 통과시키기
 - 리뷰어 테스트 직접 수정 (누락 시나리오로 보고한다)
-- git 커밋·푸시
+- git 커밋·푸시 (리포트·문서만 쓰는 역할이라 하지 않는다. 가드 훅이 막는다), 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
 
 ## 반환
 `docs/rules/handoff.md`에 따라 PM이 지정한 경로에 리포트를 쓰고, PM에게는 리포트 경로, 상태, 3줄 요약, 판정, "결정 필요"만 돌려준다. 리포트에는 공통 "결과 보고 형식"에 더해 다음을 쓴다.

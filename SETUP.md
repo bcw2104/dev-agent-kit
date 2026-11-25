@@ -10,7 +10,7 @@ dev-agent-kit/
 ├── README.md                # 사람용 요약
 ├── .gitattributes           # .sh 파일을 LF로 유지 (Windows 클론 대비)
 ├── install.sh               # 처음 설치: sync.sh 실행 + 자동 동기화 훅 등록
-├── hooks/guard.js           # 가드 훅: 키트 에이전트의 git 쓰기·소유 영역 밖 수정 차단 (sync.sh가 등록)
+├── hooks/guard.js           # 가드 훅: 키트 에이전트의 금지 git 명령(역할별)·소유 영역 밖 수정 차단 (sync.sh가 등록)
 ├── sync.sh                  # ~/.claude ↔ 저장소 양방향 동기화 (세션 시작·종료 때 자동 실행)
 ├── init-project.sh          # 프로젝트에 CLAUDE.md와 docs/ 적용
 ├── local/                   # (git 제외) 이 PC에만 쓰는 설정: 외부 플러그인 지시(overlay/), 권한·env(permissions.json)
@@ -54,7 +54,7 @@ chmod +x install.sh init-project.sh
   - `ask` (실행 직전 확인 창): `terraform apply`·`destroy` 같은 IaC 적용 명령, 배포를 일으키는 `gh workflow run`·`gh run rerun`·`docker push` 등. ask 규칙은 auto 모드에서도 적용된다
   - `allow` (확인 없이 실행): `git add`, `git commit`, `git push`. push만으로는 배포가 일어나지 않도록 CD를 수동 실행으로만 만드는 규칙(infra)이 있어서 push는 확인하지 않는다
   - `remove`: 예전 키트가 넣었지만 이제 빼는 규칙. 동기화 때 ask·allow·deny에서 지운다 (예: 예전의 `git push` 확인 규칙)
-- `~/.claude/settings.json`의 `hooks.PreToolUse`에 가드 훅(`hooks/guard.js`)이 등록된다. 키트 서브에이전트가 커밋·푸시·브랜치 전환 등 git 쓰기 명령을 실행하거나, 읽기 위주 역할(security-reviewer, planning-researcher, planning-spec)이 소유 영역 밖 파일을 Edit/Write로 고치면 막는다. 메인 세션(PM)과 키트 밖 에이전트에는 적용되지 않는다. Bash로 파일을 쓰는 것은 막지 못하는 보조 장치다.
+- `~/.claude/settings.json`의 `hooks.PreToolUse`에 가드 훅(`hooks/guard.js`)이 등록된다. 키트 서브에이전트 중 커밋하지 않는 역할(security-reviewer, planning-researcher, planning-spec, qa)의 커밋·푸시 등 git 쓰기 명령과, 모든 키트 서브에이전트의 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, pull, force push, PR 생성·머지를 막는다. 구현 담당과 리뷰어는 PM 지시에 따라 커밋·푸시할 수 있다 (`docs/rules/basics.md` "Git"). 읽기 위주 역할(security-reviewer, planning-researcher, planning-spec)이 소유 영역 밖 파일을 Edit/Write로 고치는 것도 막는다. 메인 세션(PM)과 키트 밖 에이전트, 그리고 키트 규칙을 쓰지 않는 프로젝트(`docs/rules/basics.md`가 없는 프로젝트. 같은 이름의 qa·infra 담당이 있어도)에는 적용되지 않는다. Bash로 파일을 쓰는 것은 막지 못하는 보조 장치다.
 - `~/.claude/settings.json`의 `hooks`에 자동 동기화 훅이 등록된다 (아래 "PC 간 동기화"). 원하지 않으면 `./install.sh --no-hooks`.
 - 키트 폴더는 **자기 GitHub 저장소**를 `git clone`한 폴더여야 하고, 이 PC에서 그 저장소로 push할 수 있어야 한다 (SSH 키 등록). 공개된 키트를 쓰려면 먼저 포크(fork)한 뒤 그 포크를 clone한다.
 - 외부 플러그인·스킬은 키트에 들어 있지 않다. 쓰고 싶으면 각자 설치하고, 에이전트에 덧붙일 지시는 키트 폴더의 `local/`(git에 올라가지 않음)에 둔다 (아래 "로컬 전용 설정").
