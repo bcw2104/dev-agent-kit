@@ -49,7 +49,7 @@ model: opus
 - `frontend/Dockerfile`: 프로덕션 빌드 결과를 정적 서빙. MSW가 켜지지 않게 `VITE_API_MOCKING`을 넣지 않는다
 
 ## 일반 작업
-- **CI**: 비공개 저장소의 GitHub Actions는 무료 사용량(월 2,000분)을 넘으면 비용이 든다. 그래서 CI를 포함한 모든 워크플로는 **수동 실행(`workflow_dispatch`)만** 두고, 새 워크플로를 만들 때도 `push`·`pull_request`·`schedule` 자동 트리거를 넣지 않는다. 평소 검증은 로컬 테스트로 하고, CI는 기능 단계가 끝났을 때나 배포 전에 PM이 `gh workflow run <워크플로> --ref <브랜치>`로 돌린다. 자동 트리거가 꼭 필요하거나 실행 시간이 크게 늘어나는 설정(매트릭스, 긴 E2E)은 `docs/templates/cost-approval.md` 형식으로 올린다
+- **CI**: 비공개 저장소의 GitHub Actions는 무료 사용량(월 2,000분)을 넘으면 비용이 든다. 그래서 CI를 포함한 모든 워크플로는 **수동 실행(`workflow_dispatch`)만** 두고, 새 워크플로를 만들 때도 `push`·`pull_request`·`schedule` 자동 트리거를 넣지 않는다. CI는 사용자가 직접 지시할 때만 PM이 `gh workflow run <워크플로> --ref <브랜치>`로 돌리고, 평소 검증과 배포 전 검증은 로컬 빌드·테스트와 QA로 한다 (이 조건은 기본값이다. 무료 사용량이 넉넉한 공개 저장소라면 배포 전 실행으로 바꿔도 된다). 자동 트리거가 꼭 필요하거나 실행 시간이 크게 늘어나는 설정(매트릭스, 긴 E2E)은 `docs/templates/cost-approval.md` 형식으로 올린다
 - **CD**: 배포 워크플로는 **수동 실행(`workflow_dispatch`)으로만** 만든다. push나 머지만으로 운영 배포가 일어나게 하지 않는다
   - 비공개 저장소에서 environment의 "승인자 필요(required reviewers)"는 GitHub Enterprise에서만 동작하고, Free 요금제는 비공개 저장소에 environment 자체를 만들 수 없다. 그러니 승인 장치로 쓰지 말고, environment를 쓰더라도 트리거는 `workflow_dispatch`만 둔다
 - **배포**: 산출물 생성, 마이그레이션 실행 순서(배포 전 Flyway 적용과 롤백 SQL 확인), 헬스체크, 롤백 절차
@@ -94,7 +94,7 @@ model: opus
 - ADR이 필요해 보이면 직접 만들지 말고 "결정 필요"로 올린다. PM이 번호를 지정해 맡기면 `docs/adr/`에 쓴다 (`docs/rules/handoff.md` "ADR")
 - DB 스키마 변경 금지 (dba 담당)
 - git은 `docs/rules/basics.md` "Git"대로만 쓴다: PM 지시가 있을 때만 자기 변경을 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다. 브랜치·태그·히스토리 조작은 하지 않는다 (가드 훅이 막는다)
-- 워크플로 수동 실행(CI 포함)과 이미지 push를 하지 않는다 (CI 실행은 PM이, 배포 트리거는 CEO 지시가 있을 때 PM이 한다)
+- 워크플로 수동 실행(CI 포함)과 이미지 push를 하지 않는다 (CI 실행은 사용자 지시가 있을 때만 PM이, 배포 트리거는 CEO 지시가 있을 때 PM이 한다)
 
 ## 반환
 `docs/rules/handoff.md`에 따라 PM이 지정한 경로에 리포트를 쓰고, PM에게는 리포트 경로, 상태, 3줄 요약, "결정 필요"만 돌려준다. 리포트에는 공통 "결과 보고 형식"에 더해 해당하면 다음을 쓴다.

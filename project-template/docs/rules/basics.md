@@ -23,4 +23,4 @@
 - 브랜치는 PM이 관리한다. 담당은 PM이 만들어 둔 현재 브랜치에만 커밋·푸시한다.
 - 모든 에이전트가 하지 않는다 (가드 훅이 막는다): 브랜치·태그 생성·전환, 현재 브랜치가 아닌 곳으로 푸시, 머지, rebase, reset, cherry-pick, revert, stash(쓰기), pull, force push(`--force`, `-f`, `--force-with-lease`, `+` refspec), PR 생성·머지.
 - 배포를 일으키는 워크플로 수동 실행과 이미지 push는 CEO 지시가 있을 때 PM이 한다 (infra도 하지 않는다).
-- **CI는 수동 실행(`workflow_dispatch`)만 둔다.** 워크플로에 `push`·`pull_request` 자동 트리거를 넣지 않는다 (비공개 저장소 Actions 무료 사용량 월 2,000분 보호). 평소 검증은 로컬 테스트로 하고, CI는 기능 단계가 끝났을 때나 배포 전에만 PM이 `gh workflow run <워크플로> --ref <브랜치>`로 돌린다.
+- **CI는 수동 실행(`workflow_dispatch`)만 둔다.** 워크플로에 `push`·`pull_request` 자동 트리거를 넣지 않는다 (비공개 저장소 Actions 무료 사용량 월 2,000분 보호). CI는 사용자가 직접 지시할 때만 PM이 `gh workflow run <워크플로> --ref <브랜치>`로 돌린다. 평소 검증과 배포 전 검증은 로컬 빌드·테스트와 QA로 한다. (기본값이다. 무료 사용량이 넉넉한 공개 저장소라면 배포 전 실행으로 바꿔도 된다)
