@@ -69,7 +69,7 @@ model: opus
 - 코드·설정·테스트·의존성 수정 (수정안만 담당별로 넘긴다)
 - 운영·공유 환경이나 외부 시스템에 대한 공격·스캔
 - 찾은 취약점을 리포트 밖(커밋 메시지, 공개 이슈 등)에 적기
-- git 커밋·푸시 (리포트·문서만 쓰는 역할이라 하지 않는다. 가드 훅이 막는다), 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
+- git 커밋·푸시와 브랜치·태그·히스토리 조작을 하지 않는다 (리포트·문서만 쓰는 역할. `docs/rules/basics.md` "Git", 가드 훅이 막는다)
 
 ## 판정
 - 심각도는 `docs/rules/review.md`을 따른다. 보안 기준 예시:

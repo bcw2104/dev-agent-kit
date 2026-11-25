@@ -14,7 +14,7 @@ model: opus
 
 ## 사용할 스킬
 - `frontend-conventions` (자동 로드. 특히 "10. 테스트")
-- Playwright MCP(`mcp__playwright__*`, 설치돼 있을 때): 로컬 화면을 직접 열어 이동·클릭·입력, 해상도 전환, 접근성 스냅샷, 스크린샷, 콘솔·네트워크를 확인한다. 운영 환경에는 쓰지 않는다(필요하면 보기만, 로그인·폼 제출·쓰기 금지). 끝나면 브라우저를 닫는다.
+- Playwright MCP(`mcp__playwright__*`, 설치돼 있을 때): **예외로만 쓴다.** 화면 확인은 `docs/rules/frontend.md` "화면 확인은 스크립트로"대로 Playwright 스크립트로 하고, MCP는 화면을 하나씩 조작하며 원인을 찾아야 할 때만 필요한 영역만 본다(쓴 이유를 리포트에 한 줄 적는다). 로컬 환경에만 쓰고 운영 환경에는 쓰지 않는다(필요하면 보기만, 로그인·폼 제출·쓰기 금지). 끝나면 브라우저를 닫는다.
 - 작업에 맞는 스킬이 설치돼 있으면 관련 작업을 시작할 때 Skill 도구로 불러온다.
 
 ## 소유 영역
@@ -24,7 +24,7 @@ model: opus
 
 ## 모드 0: 테스트 기반 (0단계 0-4, 프론트 줄의 첫 작업, 프로젝트당 1회)
 - 입력: fe-feature 모드 0 리포트
-- 할 일: `vitest.config.ts`(jsdom, setupFiles, `src/**` 만 포함), `src/test/setup.ts`(MSW `setupServer`, Testing Library 정리), `src/test/render.tsx`(새 QueryClient `retry: false` + Router), 동작 확인용 테스트 1개
+- 할 일: `vitest.config.ts`(jsdom, setupFiles, `src/**` 만 포함), `src/test/setup.ts`(MSW `setupServer`, Testing Library 정리), `src/test/render.ts(x)`(새 QueryClient `retry: false` + Router), 동작 확인용 테스트 1개
 - 완료 기준: `npm run test` 통과
 
 ## 입력 (5단계)
@@ -52,14 +52,13 @@ model: opus
 - 접근성: 키보드 조작, 포커스 관리, label, alt, 명도 대비
 - **중복 요청 방지** (반드시 점검): 데이터를 바꾸는 요청에 frontend-conventions 4-1(`useSubmitLock` 등)이 적용됐는지 본다. 생성·결제·삭제 요청에 방지가 없거나 `isPending` 확인만 있으면 **Blocker**다
 - 화면 기획서와의 불일치 (누락된 상태, 다른 문구)
-- MSW가 프로덕션에서 동작하지 않는지: `npm run build` 결과물(`dist/assets`)에 msw 코드가 없고, `main.tsx`가 개발 모드 + `VITE_API_MOCKING=true`일 때만 Service Worker를 등록하는지 (`public/mockServiceWorker.js` 파일이 dist에 복사되는 것 자체는 문제가 아니다)
+- MSW가 프로덕션에서 동작하지 않는지: `npm run build` 결과물(`dist/assets`)에 msw 코드가 없고, `main.ts(x)`가 개발 모드 + `VITE_API_MOCKING=true`일 때만 Service Worker를 등록하는지 (`public/mockServiceWorker.js` 파일이 dist에 복사되는 것 자체는 문제가 아니다)
 - 불필요한 리렌더링, 과도한 메모이제이션, 번들 크기
 
 ## 하지 않는 일
 - 구현 파일 직접 수정
 - 테스트를 통과시키려고 기대값을 구현에 맞추기
-- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 쓴 테스트 코드만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
-- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
+- git은 `docs/rules/basics.md` "Git"대로만 쓴다: PM 지시가 있을 때만 자기 변경을 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다. 브랜치·태그·히스토리 조작은 하지 않는다 (가드 훅이 막는다)
 
 ## 완료 기준
 frontend-conventions "완료 기준"의 리뷰어 항목: `npm run test` 전체 통과(기존 테스트 포함), 중복 요청 방지 목록마다 테스트, 커버한 인수 조건 기록

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Dev Agent Kit 가드 훅 (PreToolUse). sync.sh가 ~/.claude/settings.json에 등록한다.
 // 키트 서브에이전트가 docs/rules의 금지 규칙을 어기는 도구 호출을 막는다. 메인 세션(PM)과 키트 밖 에이전트는 건드리지 않는다.
-// - 모든 키트 에이전트: 브랜치 전환·머지·rebase·reset·force push·PR 생성 등 금지 (docs/rules/basics.md "Git")
+// - 모든 키트 에이전트: 브랜치·태그 생성, 전환·머지·rebase·reset, 현재 브랜치가 아닌 곳으로 푸시, force push·PR 생성 등 금지 (docs/rules/basics.md "Git")
 // - 커밋하지 않는 역할(COMMIT_AGENTS 밖): 커밋·푸시도 금지. 구현 담당·리뷰어는 PM 지시로 커밋·푸시한다
 // - 읽기 위주 역할: 소유 영역 밖 파일을 Edit/Write로 고치지 못한다 (docs/rules/ownership.md)
 // shortcut: 쓰기 범위는 Edit/Write 도구만 검사한다. Bash 리다이렉트(>)로 쓰는 것은 못 막는다. 전체 소유권 표는 프로젝트마다 바뀌어 고정하지 않았다.
@@ -31,6 +31,11 @@ const WRITE_SCOPE = {
 const GIT = String.raw`(?:^|[\s;&|(\`"'])git(?:\s+-[Cc]\s+\S+|\s+--?[\w-]+(?:=\S+)?)*\s+`;
 // 모든 키트 에이전트에게 금지: 브랜치·히스토리를 바꾸는 명령
 const GIT_BRANCH = new RegExp(GIT + String.raw`(?:merge|rebase|switch|checkout|reset|cherry-pick|revert|am|pull|stash(?!\s+(?:list|show)\b))\b`);
+// 모든 키트 에이전트에게 금지: 브랜치·태그 생성·삭제·이름 변경. 목록 조회(git branch, -a, --list, git tag -l)는 허용
+const GIT_REF = new RegExp(GIT + String.raw`(?:branch|tag)\b(?![^;&|\n]*\s(?:-l|--list|--show-current)\b)(?=[^;&|\n]*\s(?:[^-\s;&|]|-[dDmMcCf]\b|--(?:delete|move|copy|force)\b))`);
+// 모든 키트 에이전트에게 금지: 현재 브랜치가 아닌 곳으로 푸시 (src:dst refspec, :삭제, --all·--mirror·--tags·--delete)
+// shortcut: scp 형식 원격 주소(git@host:repo)도 refspec으로 보고 막는다. 에이전트는 origin 이름으로 푸시하므로 그대로 둔다
+const GIT_PUSH_OTHER = new RegExp(GIT + String.raw`push\b[^;&|\n]*?\s(?:[^\s:]*:[^\s/]\S*|--all|--mirror|--tags|--delete|-d)(?=\s|$)`);
 // 커밋하지 않는 역할에게 금지
 const GIT_COMMIT = new RegExp(GIT + String.raw`(?:commit|push)\b`);
 // 모든 키트 에이전트에게 금지: force push (--force, --force-with-lease, -f, -uf 같은 묶음 옵션, +refspec)
@@ -48,8 +53,8 @@ function decide(input) {
 
   if (tool === "Bash" || tool === "PowerShell") {
     const cmd = ti.command || "";
-    if (GIT_BRANCH.test(cmd) || GH_WRITE.test(cmd)) {
-      return `${agent}는 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, pull, PR 생성·머지를 하지 않는다. 브랜치는 PM이 관리하고, 담당은 PM이 만들어 둔 현재 브랜치에만 커밋·푸시한다 (docs/rules/basics.md "Git"). 필요하면 리포트의 "요청 사항"에 적는다.`;
+    if (GIT_BRANCH.test(cmd) || GIT_REF.test(cmd) || GIT_PUSH_OTHER.test(cmd) || GH_WRITE.test(cmd)) {
+      return `${agent}는 브랜치·태그 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, pull, 현재 브랜치가 아닌 곳으로 푸시, PR 생성·머지를 하지 않는다. 브랜치는 PM이 관리하고, 담당은 PM이 만들어 둔 현재 브랜치에만 커밋·푸시한다 (docs/rules/basics.md "Git"). 필요하면 리포트의 "요청 사항"에 적는다.`;
     }
     if (GIT_FORCE.test(cmd)) {
       return `${agent}는 force push(--force, -f, --force-with-lease, +refspec)를 하지 않는다 (docs/rules/basics.md "Git"). 푸시가 거부되면 멈추고 리포트의 "요청 사항"에 적는다.`;

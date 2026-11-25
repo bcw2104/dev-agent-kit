@@ -23,9 +23,9 @@
 | `backend/.../domain/{domain}/entity/`, `repository/`(`query/` 포함), `mapper/`, `service/`, `exception/` | be-domain |
 | `backend/src/main/resources/mapper/` (MyBatis XML) | be-domain |
 | `backend/src/test/` (test 리소스 포함) | be-reviewer |
-| `frontend/` 설정·진입점 (`package.json`, lockfile, `vite.config.ts`, `tsconfig*`, ESLint, `index.html`, `src/main.tsx`, `.env.development`, `.env.example`, 프론트 `.gitignore`), `frontend/public/` | fe-feature (테스트 도구 devDependencies는 fe-reviewer가 직접 추가) |
+| `frontend/` 설정·진입점 (`package.json`, lockfile, `vite.config.ts`, `tsconfig*`, ESLint, `index.html`, `src/main.ts(x)`, `.env.development`, `.env.example`, 프론트 `.gitignore`), `frontend/public/` | fe-feature (테스트 도구 devDependencies는 fe-reviewer가 직접 추가) |
 | `frontend/src/app/`, `features/`, `shared/api/`, `shared/hooks/`, `shared/lib/`, `mocks/` | fe-feature |
-| `frontend/src/shared/ui/` (`layout/` 포함), `shared/styles/`, 디자인 토큰 | fe-design-system (예외: 0단계 0-3에 fe-feature가 `shared/styles/global.css` **빈 파일만** 만들어 `main.tsx`에서 import한다. 그 뒤 내용과 파일은 fe-design-system 소유) |
+| `frontend/src/shared/ui/` (`layout/` 포함), `shared/styles/`, 디자인 토큰 | fe-design-system (예외: 0단계 0-3에 fe-feature가 `shared/styles/global.css` **빈 파일만** 만들어 `main.ts(x)`에서 import한다. 그 뒤 내용과 파일은 fe-design-system 소유) |
 | `frontend/**/*.test.ts(x)`, `frontend/src/test/`, `frontend/vitest.config.ts` | fe-reviewer |
 | `e2e/` (자체 `package.json`, `playwright.config.ts`, 시드·테스트 계정 포함) | qa |
 | `docker-compose*.yml`, 루트 `.env.example`, 루트 `.gitignore`, `backend/Dockerfile`·`.dockerignore`, `frontend/Dockerfile`·`.dockerignore`, `.github/workflows/`, `infra/`, 리버스 프록시 설정 | infra |

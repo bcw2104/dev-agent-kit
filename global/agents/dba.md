@@ -104,8 +104,7 @@ model: opus
 - 대용량 테이블 변경은 잠금 영향과 예상 소요 시간을 함께 적는다
 - ADR이 필요해 보이는 결정(DB 엔진 변경, 공통 데이터 패턴)은 직접 만들지 말고 "결정 필요"로 올린다. PM이 번호를 지정해 맡기면 `docs/adr/`에 쓴다 (`docs/rules/handoff.md` "ADR")
 - 마이그레이션마다 롤백 SQL을 `docs/db/{feature}.md`에 함께 기록한다
-- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 만든 변경만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
-- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
+- git은 `docs/rules/basics.md` "Git"대로만 쓴다: PM 지시가 있을 때만 자기 변경을 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다. 브랜치·태그·히스토리 조작은 하지 않는다 (가드 훅이 막는다)
 
 ## 완료 기준
 - 설계 모드: `cd backend && ./gradlew test --tests '*SmokeTest'`로 새 DB에 전체 마이그레이션이 오류 없이 적용됨을 확인한다 (엔티티는 아직 없을 수 있으므로 마이그레이션 적용까지 본다. 기존 테이블을 바꿔서 기존 엔티티의 `validate`가 실패하는 것은 4단계에서 be-domain이 맞출 부분이므로, 실패 내용을 리포트에 적고 완료로 본다). Docker가 없어 실행할 수 없으면 이유와 함께 "차단됨". 서버를 직접 띄우지 않는다

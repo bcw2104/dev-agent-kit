@@ -17,7 +17,7 @@ frontend/
 ├── vitest.config.ts                                           # fe-reviewer
 ├── public/mockServiceWorker.js                                # fe-feature (MSW)
 └── src/
-    ├── main.tsx        # fe-feature: 진입점 (MSW 조건부 시작 포함)
+    ├── main.ts(x)        # fe-feature: 진입점 (MSW 조건부 시작 포함)
     ├── app/            # fe-feature: 라우터, 전역 Provider(QueryClient 등), 라우트별 레이아웃 배치
     ├── shared/
     │   ├── api/        # fe-feature: http 클라이언트, ApiError, 공통 타입(ApiResponse, PageResponse)
@@ -101,7 +101,7 @@ frontend/
 - 컴포넌트에서 axios/fetch를 직접 호출하지 않는다. 항상 `features/{x}/api`의 함수나 query 훅을 통한다.
 - 요청/응답 타입은 `docs/api/{feature}.yaml`(OpenAPI)과 일치시킨다. 타입 이름은 명세의 스키마 이름과 같게 짓는다.
 - 에러 메시지 표시는 공통 처리(토스트 등)를 기본으로 하고, 화면별 처리(필드 에러, 409 안내)가 필요할 때만 개별 처리한다.
-- **MSW mock**: `src/mocks/`의 handlers는 API 명세 응답 형식을 따른다(시각은 `Z`로 끝나는 UTC). `main.tsx`에서 `import.meta.env.DEV && import.meta.env.VITE_API_MOCKING === 'true'`일 때만 동적 import로 시작한다. 기본값은 꺼짐이다: `.env.development`에 `VITE_API_MOCKING=false`, mock으로 개발할 때는 `npm run dev:mock`(`VITE_API_MOCKING=true vite`) 스크립트를 쓴다. 프로덕션 번들에 msw 코드가 들어가지 않고 Service Worker가 등록되지 않아야 한다 (`public/mockServiceWorker.js` 파일이 dist에 복사되는 것은 등록되지 않으면 무해하다). `msw` 패키지는 fe-feature가 devDependency로 설치한다.
+- **MSW mock**: `src/mocks/`의 handlers는 API 명세 응답 형식을 따른다(시각은 `Z`로 끝나는 UTC). `main.ts(x)`에서 `import.meta.env.DEV && import.meta.env.VITE_API_MOCKING === 'true'`일 때만 동적 import로 시작한다. 기본값은 꺼짐이다: `.env.development`에 `VITE_API_MOCKING=false`, mock으로 개발할 때는 `npm run dev:mock`(`VITE_API_MOCKING=true vite`) 스크립트를 쓴다. 프로덕션 번들에 msw 코드가 들어가지 않고 Service Worker가 등록되지 않아야 한다 (`public/mockServiceWorker.js` 파일이 dist에 복사되는 것은 등록되지 않으면 무해하다). `msw` 패키지는 fe-feature가 devDependency로 설치한다.
 
 ## 4-1. 중복 요청 방지
 
@@ -170,7 +170,7 @@ frontend/
 ## 10. 테스트 (fe-reviewer)
 
 - Vitest + Testing Library, 환경은 jsdom. `src/test/setup.ts`에서 MSW `setupServer(...handlers)`를 `src/mocks/` handlers로 띄우고, 테스트마다 `server.use(...)`로 덮어쓴다.
-- 렌더 헬퍼(`src/test/render.tsx`)는 테스트마다 새 QueryClient(`retry: false`)와 Router를 감싼다.
+- 렌더 헬퍼(`src/test/render.ts(x)`)는 테스트마다 새 QueryClient(`retry: false`)와 Router를 감싼다.
 - 요소는 role/label로 찾는다. 구현 세부(클래스명, 내부 상태)를 검사하지 않는다.
 - http 클라이언트: 403 `CSRF_INVALID` 응답 뒤 `me`를 다시 불러 **한 번만** 재시도하는지, `me`·로그인의 401에서 로그인 화면으로 이동하지 않는지 검증한다.
 - **중복 요청 테스트**: **같은 틱에** 이벤트를 두 번 보낸다. `await user.click()`을 두 번 하면 사이에 리렌더가 끼어 버튼이 이미 비활성이 되므로, 잠금이 없고 `isPending`만 있는 구현도 통과해 버린다.

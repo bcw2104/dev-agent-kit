@@ -18,7 +18,7 @@ model: opus
 
 ## 소유 영역
 - 디자인 토큰 (색상, 간격, 타이포그래피, radius, shadow, breakpoint)
-- `frontend/src/shared/ui/` (`layout/` 포함), `frontend/src/shared/styles/` (`global.css`는 0단계에 fe-feature가 빈 파일로 만들어 `main.tsx`에 연결해 둔다. 내용은 내가 채운다)
+- `frontend/src/shared/ui/` (`layout/` 포함), `frontend/src/shared/styles/` (`global.css`는 0단계에 fe-feature가 빈 파일로 만들어 `main.ts(x)`에 연결해 둔다. 내용은 내가 채운다)
 - 라우트에 레이아웃을 배치하는 일(`app/`)은 fe-feature 담당이다
 
 ## 입력
@@ -45,8 +45,7 @@ model: opus
 - 컴포넌트에 API 호출이나 비즈니스 로직을 넣지 않는다
 - 유료 폰트·아이콘·UI 라이브러리는 쓰지 않는다 (필요하면 `docs/templates/cost-approval.md` 형식으로 리포트에 쓴다)
 - 테스트 코드는 쓰지 않는다 (fe-reviewer 담당)
-- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 만든 변경만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
-- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
+- git은 `docs/rules/basics.md` "Git"대로만 쓴다: PM 지시가 있을 때만 자기 변경을 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다. 브랜치·태그·히스토리 조작은 하지 않는다 (가드 훅이 막는다)
 
 ## 완료 기준
 frontend-conventions "완료 기준"의 구현 담당 항목 + 새/변경 컴포넌트의 사용 예시를 컴포넌트 파일 상단 주석으로 제공

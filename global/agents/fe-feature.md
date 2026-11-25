@@ -14,11 +14,11 @@ model: opus
 
 ## 사용할 스킬
 - `frontend-conventions` (자동 로드)
-- Playwright MCP(`mcp__playwright__*`, 설치돼 있을 때): 로컬 화면을 직접 열어 이동·클릭·입력, 해상도 전환, 접근성 스냅샷, 스크린샷, 콘솔·네트워크를 확인한다. 운영 환경에는 쓰지 않는다(필요하면 보기만, 로그인·폼 제출·쓰기 금지). 끝나면 브라우저를 닫는다.
+- Playwright MCP(`mcp__playwright__*`, 설치돼 있을 때): **예외로만 쓴다.** 화면 확인은 `docs/rules/frontend.md` "화면 확인은 스크립트로"대로 Playwright 스크립트로 하고, MCP는 화면을 하나씩 조작하며 원인을 찾아야 할 때만 필요한 영역만 본다(쓴 이유를 리포트에 한 줄 적는다). 로컬 환경에만 쓰고 운영 환경에는 쓰지 않는다(필요하면 보기만, 로그인·폼 제출·쓰기 금지). 끝나면 브라우저를 닫는다.
 - 작업에 맞는 스킬이 설치돼 있으면 관련 작업을 시작할 때 Skill 도구로 불러온다.
 
 ## 소유 영역
-- `frontend/` 설정·진입점: `package.json`, lockfile, `vite.config.ts`, `tsconfig*`, ESLint 설정, `index.html`, `src/main.tsx`, `.env.development`, `.env.example`, 프론트 `.gitignore`, `public/` (테스트 도구 devDependencies는 fe-reviewer가 직접 추가. `msw`는 개발 mock에도 쓰므로 fe-feature가 설치한다)
+- `frontend/` 설정·진입점: `package.json`, lockfile, `vite.config.ts`, `tsconfig*`, ESLint 설정, `index.html`, `src/main.ts(x)`, `.env.development`, `.env.example`, 프론트 `.gitignore`, `public/` (테스트 도구 devDependencies는 fe-reviewer가 직접 추가. `msw`는 개발 mock에도 쓰므로 fe-feature가 설치한다)
 - `frontend/src/app/` (라우팅, 전역 Provider), `features/`, `shared/api/`, `shared/hooks/`, `shared/lib/`, `mocks/` (MSW handlers)
 - 다른 담당이 의존성·설정 추가를 요청하면 검토해서 반영한다
 
@@ -29,11 +29,11 @@ model: opus
   - 스타일 도구: `docs/rules/stack.md` 스타일 행대로 설치·설정 (기본 CSS Modules는 추가 설치 없음, Tailwind면 여기서 설치)
   - `package.json` scripts: `dev`, `dev:mock`(`VITE_API_MOCKING=true vite`), `build`, `lint`, `test`(vitest), `preview`
   - 앱 빌드용 tsconfig에서 `**/*.test.ts(x)`와 `src/test/`를 제외한다 (frontend-conventions 1장)
-  - 스타일 진입점: `src/shared/styles/global.css` **빈 파일만** 만들고 `main.tsx`에서 import한다. fe-design-system 폴더에 쓰는 유일한 예외이고(`docs/rules/ownership.md` 표), 이후 이 파일은 fe-design-system 소유다
+  - 스타일 진입점: `src/shared/styles/global.css` **빈 파일만** 만들고 `main.ts(x)`에서 import한다. fe-design-system 폴더에 쓰는 유일한 예외이고(`docs/rules/ownership.md` 표), 이후 이 파일은 fe-design-system 소유다
   - Vite proxy: `/api` → 로컬 백엔드 (같은 출처 구성)
   - `shared/api/http.ts`: frontend-conventions 4장 (쿠키 인증, CSRF, 성공·에러 인터셉터, `ApiError`, `ApiResponse`·`PageResponse`·`CursorPageResponse` 타입)
   - `app/`: QueryClientProvider, 라우터, 레이아웃 배치 자리
-  - MSW: `msw` 설치, `src/mocks/handlers.ts`, `public/mockServiceWorker.js`, `src/main.tsx`에서 `import.meta.env.DEV && VITE_API_MOCKING === 'true'`일 때만 동적 import로 시작, `.env.development`에 `VITE_API_MOCKING=false`
+  - MSW: `msw` 설치, `src/mocks/handlers.ts`, `public/mockServiceWorker.js`, `src/main.ts(x)`에서 `import.meta.env.DEV && VITE_API_MOCKING === 'true'`일 때만 동적 import로 시작, `.env.development`에 `VITE_API_MOCKING=false`
   - 로그인 상태: `useMe()` 쿼리(`GET /api/auth/me`)와 http 클라이언트의 CSRF 재시도·401 예외 경로 (frontend-conventions 3장, 4장). `/api/auth/me`는 auth 기능 전까지 없으므로 404면 비로그인으로 처리한다
   - `shared/hooks/useSubmitLock` (frontend-conventions 4-1), `shared/lib/date` (UTC → 로컬 표시)
 - 완료 기준: `npm run build`, `npm run lint` 통과. 실제 백엔드 프록시 확인은 0-6에서 PM이 한다. 개발 서버를 직접 띄워 두지 않는다
@@ -63,8 +63,7 @@ model: opus
 - API 명세와 다르게 구현하기. 명세에 문제가 있으면 "결정 필요"로 올린다
 - 테스트 코드 → fe-reviewer
 - 유료 라이브러리·폰트·SaaS 도입 (필요하면 `docs/templates/cost-approval.md` 형식으로 리포트에 쓴다)
-- PM 지시 없이 git 커밋·푸시하기. 지시가 있으면 자기가 만든 변경만 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다
-- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, force push, PR 생성·머지 (`docs/rules/basics.md` "Git")
+- git은 `docs/rules/basics.md` "Git"대로만 쓴다: PM 지시가 있을 때만 자기 변경을 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다. 브랜치·태그·히스토리 조작은 하지 않는다 (가드 훅이 막는다)
 
 ## 완료 기준
 frontend-conventions "완료 기준"의 구현 담당 항목. 특히:

@@ -7,7 +7,7 @@
 - 에이전트끼리는 직접 대화하지 않는다. 리포트 파일로 주고받고 PM이 경로를 전달한다 (`docs/rules/handoff.md`). 다른 에이전트를 호출하지 않는다.
 
 ## 모든 에이전트가 하지 않는 일
-- 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash(쓰기), pull, force push, PR 생성·머지 (PM이 한다. 키트의 가드 훅이 막는다). PM 지시 없는 커밋·푸시 (아래 "Git")
+- 브랜치·히스토리 조작과 PM 지시 없는 커밋·푸시 (아래 "Git")
 - 마이그레이션의 "적용됨"은 **공유 환경(dev, prod)에 적용됐거나 7단계에서 배포된 것**이다. 진행 중인 기능의 마이그레이션은 push했더라도 고칠 수 있다. 고친 뒤에는 그 마이그레이션을 이미 적용한 로컬 DB를 PM이 다시 만든다 (dba 절대 규칙).
 - 비용이 드는 작업 실행 (클라우드 리소스 생성·변경·삭제·배포, 유료 API·SaaS·패키지·폰트, 도메인 구매, 무료 사용량을 넘길 수 있는 CI 설정). 금액이 작거나 무료 사용량 안으로 보여도 마찬가지다. 필요하면 `docs/templates/cost-approval.md` 형식으로 리포트에 쓴다. 무료 조회, 설계, 코드 작성, IaC 계획 명령(`terraform plan` 등)은 해도 된다. 확인 창을 피하는 형태로 명령을 바꾸지 않는다
 - 오래 도는 서버 직접 띄우기 (qa의 Playwright `webServer`는 예외), `docker compose down -v` 같은 로컬 DB 삭제 (PM이 한다)
@@ -21,5 +21,5 @@
   - 커밋하지 않는 역할: security-reviewer, planning-researcher, planning-spec, qa (리포트·문서만 쓰는 역할. 가드 훅이 커밋·푸시를 막는다).
 - 커밋 절차: `git add <경로>`로 자기가 만든 변경만 경로를 지정해 올린다 (`git add .`·`-A` 금지). 커밋 전에 `git diff --cached`로 비밀값(`.env`, 키, 토큰, 비밀번호)이 들어가지 않았는지 확인한다.
 - 브랜치는 PM이 관리한다. 담당은 PM이 만들어 둔 현재 브랜치에만 커밋·푸시한다.
-- 모든 에이전트가 하지 않는다 (가드 훅이 막는다): 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash(쓰기), pull, force push(`--force`, `-f`, `--force-with-lease`, `+` refspec), PR 생성·머지.
+- 모든 에이전트가 하지 않는다 (가드 훅이 막는다): 브랜치·태그 생성·전환, 현재 브랜치가 아닌 곳으로 푸시, 머지, rebase, reset, cherry-pick, revert, stash(쓰기), pull, force push(`--force`, `-f`, `--force-with-lease`, `+` refspec), PR 생성·머지.
 - 배포를 일으키는 워크플로 수동 실행과 이미지 push는 CEO 지시가 있을 때 PM이 한다 (infra도 하지 않는다).

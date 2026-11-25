@@ -1,6 +1,6 @@
 # 프론트엔드 부서 규칙
 
-웹 화면을 만드는 담당(fe-design-system, fe-feature, fe-reviewer, qa, be-api, infra)이 따른다.
+웹 화면을 만들고 검증하는 담당(fe-design-system, fe-feature, fe-reviewer, qa)과, 쿠키·CSRF·보안 헤더처럼 브라우저 동작에 걸린 설정을 다루는 be-api·infra가 따른다.
 
 ## 웹 플랫폼 기준
 - **Baseline 목표**는 `docs/rules/stack.md` 표의 "웹 Baseline 목표" 행을 따른다.
