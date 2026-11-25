@@ -38,18 +38,18 @@ model: opus
   - `docker-compose.yml`: 확정된 DB 엔진·버전(기본 MySQL 8.4), 문자셋·collation, UTC 타임존, 헬스체크, 볼륨, 포트. 계정·비밀번호는 `.env`에서 읽는다
   - `.env.example`: 필요한 환경변수와 예시 값 (실제 비밀값은 넣지 않는다)
   - 루트 `.gitignore`: `.env`, 빌드 산출물, IDE 파일, OS 잡파일
-  - CI(`.github/workflows/ci.yml`): PR·push마다 백엔드 `./gradlew build`(Testcontainers가 도는 Docker 러너), 프론트 build·lint·test. E2E는 시간이 길면 수동 실행(`workflow_dispatch`)으로 둔다
+  - CI(`.github/workflows/ci.yml`): 트리거는 **수동 실행(`workflow_dispatch`)만** 둔다. `push`·`pull_request`(와 `schedule`) 자동 트리거를 넣지 않는다 (비공개 저장소의 Actions 무료 사용량 월 2,000분이 금방 소진된다). 내용은 백엔드 `./gradlew build`(Testcontainers가 도는 Docker 러너), 프론트 build·lint·test, E2E(필요하면 입력값으로 선택)
   - 리버스 프록시 초안: `/api` → 백엔드, 나머지 → 프론트 정적 파일, 보안 헤더
-- 완료 기준: `docker compose up -d`로 DB가 healthy(확인 후 그대로 둔다. 내리거나 볼륨을 지우는 것은 PM이 한다), CI 워크플로 문법 검증(가능하면 `actionlint`)
+- 완료 기준: `docker compose up -d`로 DB가 healthy(확인 후 그대로 둔다. 내리거나 볼륨을 지우는 것은 PM이 한다), CI 워크플로 문법 검증(가능하면 `actionlint`), 모든 워크플로의 `on:`이 `workflow_dispatch`뿐인지 확인
 - 리포트에 be-api·fe-feature가 쓸 값(DB 호스트·포트·DB 이름·`.env` 키, 백엔드 포트)을 정리한다
-- **0-6 CI 맞추기**: PM이 "9. 명령어"를 확정하면 CI 워크플로의 명령을 그것과 맞추고 다시 문법을 검증한다
+- **0-6 CI 맞추기**: PM이 "9. 명령어"를 확정하면 CI 워크플로의 명령을 그것과 맞추고 다시 문법을 검증한다. 트리거는 계속 `workflow_dispatch`만 둔다
 
 ## Dockerfile (첫 배포 준비 때)
 - `backend/Dockerfile`: 실행 옵션에 `-Duser.timezone=UTC`, `TZ=UTC`
 - `frontend/Dockerfile`: 프로덕션 빌드 결과를 정적 서빙. MSW가 켜지지 않게 `VITE_API_MOCKING`을 넣지 않는다
 
 ## 일반 작업
-- **CI**: 비공개 저장소의 GitHub Actions는 무료 사용량을 넘으면 비용이 든다. 실행 시간이 크게 늘어나는 설정(매트릭스, 잦은 E2E)은 `docs/templates/cost-approval.md` 형식으로 올린다
+- **CI**: 비공개 저장소의 GitHub Actions는 무료 사용량(월 2,000분)을 넘으면 비용이 든다. 그래서 CI를 포함한 모든 워크플로는 **수동 실행(`workflow_dispatch`)만** 두고, 새 워크플로를 만들 때도 `push`·`pull_request`·`schedule` 자동 트리거를 넣지 않는다. 평소 검증은 로컬 테스트로 하고, CI는 기능 단계가 끝났을 때나 배포 전에 PM이 `gh workflow run <워크플로> --ref <브랜치>`로 돌린다. 자동 트리거가 꼭 필요하거나 실행 시간이 크게 늘어나는 설정(매트릭스, 긴 E2E)은 `docs/templates/cost-approval.md` 형식으로 올린다
 - **CD**: 배포 워크플로는 **수동 실행(`workflow_dispatch`)으로만** 만든다. push나 머지만으로 운영 배포가 일어나게 하지 않는다
   - 비공개 저장소에서 environment의 "승인자 필요(required reviewers)"는 GitHub Enterprise에서만 동작하고, Free 요금제는 비공개 저장소에 environment 자체를 만들 수 없다. 그러니 승인 장치로 쓰지 말고, environment를 쓰더라도 트리거는 `workflow_dispatch`만 둔다
 - **배포**: 산출물 생성, 마이그레이션 실행 순서(배포 전 Flyway 적용과 롤백 SQL 확인), 헬스체크, 롤백 절차
@@ -94,11 +94,11 @@ model: opus
 - ADR이 필요해 보이면 직접 만들지 말고 "결정 필요"로 올린다. PM이 번호를 지정해 맡기면 `docs/adr/`에 쓴다 (`docs/rules/handoff.md` "ADR")
 - DB 스키마 변경 금지 (dba 담당)
 - git은 `docs/rules/basics.md` "Git"대로만 쓴다: PM 지시가 있을 때만 자기 변경을 경로를 지정해 커밋하고 PM이 만들어 둔 현재 브랜치로 푸시한다. 브랜치·태그·히스토리 조작은 하지 않는다 (가드 훅이 막는다)
-- 워크플로 수동 실행과 이미지 push를 하지 않는다 (배포 트리거라서 CEO 지시가 있을 때 PM이 한다)
+- 워크플로 수동 실행(CI 포함)과 이미지 push를 하지 않는다 (CI 실행은 PM이, 배포 트리거는 CEO 지시가 있을 때 PM이 한다)
 
 ## 반환
 `docs/rules/handoff.md`에 따라 PM이 지정한 경로에 리포트를 쓰고, PM에게는 리포트 경로, 상태, 3줄 요약, "결정 필요"만 돌려준다. 리포트에는 공통 "결과 보고 형식"에 더해 해당하면 다음을 쓴다.
 - 비용 승인 요청 (`docs/templates/cost-approval.md` 형식)
-- 모드 0: 서비스 접속 정보(호스트, 포트, `.env` 키 이름), CI 구성 요약
+- 모드 0: 서비스 접속 정보(호스트, 포트, `.env` 키 이름), CI 구성 요약(트리거 `workflow_dispatch`만, 실행 명령 `gh workflow run ci.yml --ref <브랜치>`)
 - 배포 명령, 롤백 명령, 배포 전 체크리스트
 - 확인한 클라우드 계정/프로필

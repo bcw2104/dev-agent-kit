@@ -51,8 +51,8 @@ chmod +x install.sh init-project.sh
 - 에이전트는 `~/.claude/agents/`, 스킬은 `~/.claude/skills/`에 복사된다.
 - 이 PC에 이미 있던 파일 중 저장소와 내용이 다른 것은 `~/.claude/backup-dev-company-{시각}/`에 백업한 뒤 저장소 내용으로 바꾼다. 저장소에 없는 이 PC만의 에이전트·스킬은 저장소에 올라가 다른 PC에도 퍼진다.
 - `global/settings/permissions.json`의 규칙이 `~/.claude/settings.json`의 `permissions`에 병합된다 (사용자가 직접 넣은 규칙은 유지, 바뀌면 병합 전 백업).
-  - `ask` (실행 직전 확인 창): `terraform apply`·`destroy` 같은 IaC 적용 명령, 배포를 일으키는 `gh workflow run`·`gh run rerun`·`docker push` 등. ask 규칙은 auto 모드에서도 적용된다
-  - `allow` (확인 없이 실행): `git add`, `git commit`, `git push`. push만으로는 배포가 일어나지 않도록 CD를 수동 실행으로만 만드는 규칙(infra)이 있어서 push는 확인하지 않는다
+  - `ask` (실행 직전 확인 창): `terraform apply`·`destroy` 같은 IaC 적용 명령, 워크플로 실행 `gh workflow run`·`gh run rerun`(CI·배포 모두 수동 실행만 두므로), `docker push` 등. ask 규칙은 auto 모드에서도 적용된다
+  - `allow` (확인 없이 실행): `git add`, `git commit`, `git push`. push만으로는 배포나 CI가 돌지 않도록 모든 워크플로를 수동 실행(`workflow_dispatch`)으로만 만드는 규칙(infra, `docs/rules/basics.md`)이 있어서 push는 확인하지 않는다
   - `remove`: 예전 키트가 넣었지만 이제 빼는 규칙. 동기화 때 ask·allow·deny에서 지운다 (예: 예전의 `git push` 확인 규칙)
 - `~/.claude/settings.json`의 `hooks.PreToolUse`에 가드 훅(`hooks/guard.js`)이 등록된다. 키트 서브에이전트 중 커밋하지 않는 역할(security-reviewer, planning-researcher, planning-spec, qa)의 커밋·푸시 등 git 쓰기 명령과, 모든 키트 서브에이전트의 브랜치 생성·전환, 머지, rebase, reset, cherry-pick, revert, stash, pull, force push, PR 생성·머지를 막는다. 구현 담당과 리뷰어는 PM 지시에 따라 커밋·푸시할 수 있다 (`docs/rules/basics.md` "Git"). 읽기 위주 역할(security-reviewer, planning-researcher, planning-spec)이 소유 영역 밖 파일을 Edit/Write로 고치는 것도 막는다. 메인 세션(PM)과 키트 밖 에이전트, 그리고 키트 규칙을 쓰지 않는 프로젝트(`docs/rules/basics.md`가 없는 프로젝트. 같은 이름의 qa·infra 담당이 있어도)에는 적용되지 않는다. Bash로 파일을 쓰는 것은 막지 못하는 보조 장치다.
 - `~/.claude/settings.json`의 `hooks`에 자동 동기화 훅이 등록된다 (아래 "PC 간 동기화"). 원하지 않으면 `./install.sh --no-hooks`.

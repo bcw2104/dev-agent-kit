@@ -39,7 +39,7 @@
                 docs/adr/0001-project-setup.md 에 기록한다
                 ★ CEO 승인: 프로젝트 결정
                 승인 후 8장 표를 확정값만 남겨 정리한다 (8장 맨 위 규칙)
-0-2 infra       docker-compose(DB), .env.example, 루트 .gitignore, CI 초안, 리버스 프록시 초안
+0-2 infra       docker-compose(DB), .env.example, 루트 .gitignore, CI 초안(수동 실행만), 리버스 프록시 초안
 0-3 골격        (두 줄 병렬, 한 줄 안에서는 순서대로)
                 백엔드 줄: be-api(backend/ 골격, build.gradle, application*.yml, global/ 공통, 보안, /api/health, docs/api/_common.yaml)
                            → dba(인증을 서버 세션으로 정했을 때만: Spring Session 테이블 마이그레이션)
@@ -48,7 +48,8 @@
                 백엔드 줄: be-reviewer(테스트 기반 + SmokeTest: 새 DB에 전체 마이그레이션, validate, /api/health)
                 프론트 줄: fe-reviewer(Vitest, MSW 서버 + 확인용 테스트 1개) → fe-design-system(토큰, 기본 컴포넌트, 레이아웃)
 0-5 qa          e2e/ Playwright 프로젝트 + 로그인 없이 도는 스모크 테스트 1개
-0-6 PM          "9. 명령어"를 실제 명령으로 고치고 다음을 확인한 뒤, infra에게 CI를 9장 명령과 맞추게 한다:
+0-6 PM          "9. 명령어"를 실제 명령으로 고치고 다음을 확인한 뒤, infra에게 CI를 9장 명령과 맞추게 한다
+                (트리거는 workflow_dispatch만):
                 전체 기동(DB→백엔드→프론트), 프록시로 /api/health 응답,
                 CSRF: 토큰 없이 POST → 403과 ApiResponse 형식(CSRF_INVALID) / GET으로 쿠키 받은 뒤 토큰을 담아 POST → 403이 아님(보통 401)
                 ./gradlew test, npm run test, npx playwright test 통과
@@ -134,6 +135,7 @@ PM이 1단계 전에 규모를 정해 진행판 맨 위에 적는다. 애매하�
   - **보고는 짧게 쓴다.** 단계 보고는 완료 내용·남은 작업·결정 필요 사항만 몇 줄로 쓰고, 세부는 진행판·리포트에 둔다.
 - **반복 조회는 스크립트로 (토큰 절감)**: PM이 두 번 이상 하는 조회(실험 결과 비교, 데이터 적재 상태 등)는 즉석 명령이나 큰 JSON을 매번 읽지 말고 `scripts/pm/`(PM 소유)에 **읽기 전용** 스크립트로 만들어 짧은 표만 출력하게 한다. 파일 첫머리에 실행 방법을 적는다. DB에 쓰는 스크립트는 여기 두지 않는다.
 - **Git**: 리뷰와 QA를 통과하면 **PM이 통과를 판단하고 커밋을 지시하며, 그 변경을 만든 담당이 저장소별·작업 단위로 커밋·푸시한다** (규칙은 `docs/rules/basics.md` "Git"). PM은 단계가 끝날 때 CEO 승인 없이 커밋을 지시한다 (권한 설정에서도 `git add`·`git commit`·`git push`는 확인 창 없이 실행된다). 브랜치 생성·전환·머지·PR은 PM이 하고, 담당은 PM이 만들어 둔 현재 브랜치에만 커밋·푸시한다. 키트의 가드 훅이 커밋하지 않는 역할(security-reviewer, planning-researcher, planning-spec, qa)의 커밋·푸시와 모든 키트 에이전트의 브랜치·태그 생성·전환, 머지·rebase·reset, 현재 브랜치가 아닌 곳으로 푸시, force push·PR을 막는다. push만으로는 배포가 일어나지 않는다 (CD는 수동 실행만, infra 규칙). 배포 트리거(워크플로 실행, 이미지 push)는 CEO가 지시할 때 PM만 한다.
+- **CI**: 모든 워크플로는 수동 실행(`workflow_dispatch`)만 둔다 (push·PR 자동 트리거 금지, 비공개 저장소 Actions 무료 사용량 보호). 평소 검증은 로컬 테스트로 하고, CI는 기능 단계가 끝났을 때나 배포 전에만 PM이 `gh workflow run <워크플로> --ref <브랜치>`로 돌린다.
   - 마이그레이션 "적용됨"의 정의는 `docs/rules/basics.md`.
 
 ## 7. 승인 규칙
@@ -146,7 +148,7 @@ PM이 1단계 전에 규모를 정해 진행판 맨 위에 적는다. 애매하�
 
 ### 비용 승인
 **비용이 드는 작업은 무엇이든 CEO 승인 없이 실행하지 않는다.** 금액이 작거나 무료 사용량 범위로 보여도 마찬가지다.
-- 해당: 클라우드 리소스 생성·변경·삭제·배포, 유료 API 키 발급·플랜 변경, 도메인 구매, 유료 SaaS 가입, 유료 패키지·폰트·라이선스, 비공개 저장소의 GitHub Actions 무료 사용량을 넘길 수 있는 CI 설정
+- 해당: 클라우드 리소스 생성·변경·삭제·배포, 유료 API 키 발급·플랜 변경, 도메인 구매, 유료 SaaS 가입, 유료 패키지·폰트·라이선스, 비공개 저장소의 GitHub Actions 무료 사용량을 넘길 수 있는 CI 설정(자동 트리거 추가, 매트릭스, 긴 E2E)
 - 절차: 비용이 드는 일을 제안하는 에이전트(누구든)가 `docs/templates/cost-approval.md` 형식으로 리포트에 쓴다 → PM이 CEO에게 그대로 전달 → 승인되면 PM이 실행 → 실행 결과와 실제 리소스를 보고
 - 승인 범위를 넘는 변경(사양 상향, 수량 증가)은 새로 승인받는다
 - 무료로 할 수 있는 조회, 설계, 코드 작성, IaC의 계획 명령(`terraform plan`, `cdk diff` 등)은 승인 없이 진행한다
