@@ -15,6 +15,7 @@
 | 프로젝트 루트 `README.md` (프로젝트 소개, 실행 방법) | PM |
 | `docs/rules/` (부서별 규칙), `.claude/office.json` (agent-office 부서 배치) | PM (이 운영 규칙의 일부라 바꾸려면 CEO 승인) |
 | `docs/handoff/{feature}/README.md` (진행판) | PM |
+| `docs/handoff/README.md` (인수인계 지도, 새 세션은 여기부터), `docs/handoff/_archive.md` (끝난 기록 보관, 회고용 — 작업 중에는 읽지 않는다) | PM |
 | `docs/handoff/{feature}/{NN}-{에이전트}.md` | 그 리포트를 쓴 에이전트 (모든 에이전트가 자기 리포트를 쓴다) |
 | `backend/build.gradle`, `settings.gradle`, Gradle Wrapper(`gradlew`, `gradlew.bat`, `gradle/`), 백엔드 `.gitignore` | be-api (테스트 의존성 `testImplementation`·`testRuntimeOnly`는 be-reviewer가 직접 추가) |
 | `backend/src/main/resources/application*.yml` | be-api |
