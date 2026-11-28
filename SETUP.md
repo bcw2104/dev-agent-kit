@@ -87,11 +87,11 @@ chmod +x install.sh init-project.sh
 {
   "enabledPlugins": {
     "<플러그인>@<마켓플레이스>": false,
-    "<manifest의 name>@<manifest의 marketplaceName>": false
+    "<계정 동기화 플러그인>@synced": false
   }
 }
 ```
-- 키 이름은 `claude plugin list --json`의 `id`를 그대로 쓴다. claude.ai 계정에서 동기화된 플러그인은 표시 이름(`engineering` 등)이나 `@synced`가 아니라 `~/.claude/plugins/synced/*/manifest.json`의 `name@marketplaceName`이다(예: `2da0c8d9-…@anthropic-plugin-directory`). 틀린 키는 오류 없이 무시되니, 끈 뒤 새 세션의 스킬 목록에서 빠졌는지 확인한다.
+- 키 이름은 `claude plugin list --json`의 `id`를 그대로 쓴다. claude.ai 계정에서 동기화된 플러그인은 `<이름>@synced`다. 손으로 쓰기보다 프로젝트 폴더에서 `claude plugin disable <id> --scope project`로 끄고, `claude plugin list`에서 `Status: ✘ disabled`인지 확인한다(틀린 키는 오류 없이 무시된다).
 - 우선순위는 `settings.local.json` > 프로젝트 `settings.json` > 사용자 설정이라, 여기서 `false`로 두면 그 프로젝트에서만 꺼진다. 새 세션부터 적용된다.
 - 보안 훅처럼 모든 프로젝트에 필요한 플러그인은 끄지 않는다.
 - 꺼 둔 플러그인이 필요해지면 그 키를 `true`로 바꾸거나 지워서 다시 켜고 **새 세션**에서 쓴다. 한 번 쓰고 말 일이면 끝난 뒤 다시 `false`로 돌린다.
